@@ -1,4 +1,4 @@
-package com.marcioss.campusRide.entities.dtos;
+package com.marcioss.campusRide.entities.dtos.inputDtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
