@@ -15,9 +15,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 
 @RestController
-@RequestMapping("/client")
+@RequestMapping("/clients")
 @RequiredArgsConstructor
 public class ClientResource {
 
@@ -25,13 +26,20 @@ public class ClientResource {
     private final BCryptPasswordEncoder pe;
     private final ClientService clientService;
 
+    @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public ResponseEntity<List<ClientOutputDTO>> ListClients(){
+        var result = clientService.findAllClients();
+        return ResponseEntity.ok().body(result);
+    }
+
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<Void> createClient(@RequestBody @Valid ClientDTO clientDTO){
         Client client = modelMapper.map(clientDTO,Client.class);
         client.setPassword(pe.encode(client.getPassword()));
         var result = clientService.createClient(client);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(client.getId()).toUri();
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(result.getId()).toUri();
         return ResponseEntity.created(uri).build();
     }
 }

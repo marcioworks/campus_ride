@@ -33,12 +33,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
 
     private static final String[] PUBLIC_MATCHERS_GET = {
-            "/vehicle",
+            "/vehicles",
+            "/destinations"
     };
 
     private static final String[] PUBLIC_MATCHERS_POST = {
-            "/client/**",
-            "/vehicle/**"
+            "/clients/**",
+            "/vehicles/**",
+            "/destinations/**"
     };
 
     @Override
