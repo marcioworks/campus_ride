@@ -1,5 +1,6 @@
 package com.marcioss.campusRide.services;
 
+import com.marcioss.campusRide.Security.UserSS;
 import com.marcioss.campusRide.entities.Destination;
 import com.marcioss.campusRide.entities.Transfer;
 import com.marcioss.campusRide.entities.Vehicle;

@@ -4,6 +4,7 @@ import com.marcioss.campusRide.entities.Client;
 import com.marcioss.campusRide.entities.dtos.inputDtos.ClientDTO;
 import com.marcioss.campusRide.entities.dtos.outputDtos.ClientOutputDTO;
 import com.marcioss.campusRide.services.ClientService;
+import com.marcioss.campusRide.services.exceptions.DataIntegrityException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -35,7 +36,7 @@ public class ClientResource {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN')")
-    public ResponseEntity<Void> createClient(@RequestBody @Valid ClientDTO clientDTO){
+    public ResponseEntity<Void> createClient(@RequestBody @Valid ClientDTO clientDTO) throws DataIntegrityException {
         Client client = modelMapper.map(clientDTO,Client.class);
         client.setPassword(pe.encode(client.getPassword()));
         var result = clientService.createClient(client);
