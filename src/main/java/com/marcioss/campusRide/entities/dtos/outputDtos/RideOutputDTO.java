@@ -1,5 +1,6 @@
 package com.marcioss.campusRide.entities.dtos.outputDtos;
 
+import com.marcioss.campusRide.entities.Client;
 import com.marcioss.campusRide.entities.Destination;
 import com.marcioss.campusRide.entities.Vehicle;
 import com.marcioss.campusRide.entities.enums.ShiftEnum;

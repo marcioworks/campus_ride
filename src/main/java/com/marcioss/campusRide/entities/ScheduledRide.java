@@ -21,7 +21,7 @@ public class ScheduledRide {
     @JoinColumn(name="ride_id")
     private Ride ride;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name="client_id")
     private Client client;
 }

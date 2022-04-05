@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Service
@@ -46,16 +45,30 @@ public class RideService {
         if(rideIsFull){
             throw new DataIntegrityException("this ride is full, please chose another ride");
         }
-        ScheduledRide scheduledRide = new ScheduledRide();
         Client client = clientRepository.findByEmail(userEmail);
         if(client == null){
             throw new NotFoundException("Client not Found");
         }
+        boolean clientExists = clientExists(client.getId());
+        if(clientExists){
+            throw new DataIntegrityException("You already have a Schedule on this ride!");
+        }
+        ScheduledRide scheduledRide = new ScheduledRide();
+
         scheduledRide.setRide(ride);
         scheduledRide.setClient(client);
         scheduleRideRepository.save(scheduledRide);
         RideOutputDTO dto = modelMapper.map(ride, RideOutputDTO.class);
         return dto;
+
+    }
+
+    private boolean clientExists(Long clientId) {
+        var result = scheduleRideRepository.findByClientId(clientId);
+        if(result != null){
+            return true;
+        }
+        return false;
 
     }
 
