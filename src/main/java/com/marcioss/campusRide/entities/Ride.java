@@ -12,7 +12,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Transfer {
+public class Ride {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,6 +23,9 @@ public class Transfer {
 
     @Enumerated(EnumType.STRING)
     private ShiftEnum shift;
+
+    @Column
+    private Integer capacity;
 
     @OneToOne
     @JoinColumn(name = "destination_id")
