@@ -1,11 +1,14 @@
 package com.marcioss.campusRide.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.marcioss.campusRide.entities.enums.ShiftEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -19,7 +22,8 @@ public class Ride {
     private Long id;
 
     @Column
-    private Date date;
+    @JsonFormat(pattern="dd/MM/yyyy")
+    private LocalDate date;
 
     @Enumerated(EnumType.STRING)
     private ShiftEnum shift;

@@ -13,4 +13,7 @@ public interface ScheduleRideRepository extends JpaRepository<ScheduledRide, Lon
 
     @Query("SELECT C FROM ScheduledRide C WHERE client_id = :clientId")
     ScheduledRide findByClientId(@Param("clientId") Long clientId);
+
+    @Query("SELECT R FROM ScheduledRide R WHERE client_id= :clientId")
+    List<ScheduledRide> findAllByClientId(@Param("clientId") Long clientId);
 }

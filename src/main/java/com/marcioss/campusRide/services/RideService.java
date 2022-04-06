@@ -10,7 +10,13 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,33 +31,34 @@ public class RideService {
 
     public RideOutputDTO createTransfer(RideDTO rideDTO) {
         RideOutputDTO dto = new RideOutputDTO();
-        Ride alreadyExists = rideRepository.findByDestinationIdAndVehicleId( rideDTO.getDestinationId(),rideDTO.getVehicleId());
+        Ride alreadyExists = rideRepository
+                .findByDestinationIdAndVehicleIdAndShiftAndDate( rideDTO.getDestinationId(),rideDTO.getVehicleId(),rideDTO.getShift(),rideDTO.getDate());
         if(alreadyExists == null) {
             var result = createNewTransfer(rideDTO);
             Ride ride = rideRepository.findById(result.getId()).orElse(null);
-            scheduleRide(ride, rideDTO.getUserEmail());
+            scheduleRide(ride, rideDTO);
             dto = result;
            return dto;
         }else{
-           var result= scheduleRide(alreadyExists, rideDTO.getUserEmail());
+           var result= scheduleRide(alreadyExists, rideDTO);
             dto = result;
             return dto;
         }
 
     }
 
-    private RideOutputDTO scheduleRide(Ride ride, String userEmail) {
+    private RideOutputDTO scheduleRide(Ride ride, RideDTO rideDTO) {
         boolean rideIsFull = isFull(ride);
         if(rideIsFull){
             throw new DataIntegrityException("this ride is full, please chose another ride");
         }
-        Client client = clientRepository.findByEmail(userEmail);
+        Client client = clientRepository.findByEmail(rideDTO.getUserEmail());
         if(client == null){
             throw new NotFoundException("Client not Found");
         }
-        boolean clientExists = clientExists(client.getId());
+        boolean clientExists = clientExists(client.getId(),rideDTO);
         if(clientExists){
-            throw new DataIntegrityException("You already have a Schedule on this ride!");
+            throw new DataIntegrityException("You already have a Scheduled ride!");
         }
         ScheduledRide scheduledRide = new ScheduledRide();
 
@@ -63,10 +70,15 @@ public class RideService {
 
     }
 
-    private boolean clientExists(Long clientId) {
-        var result = scheduleRideRepository.findByClientId(clientId);
-        if(result != null){
-            return true;
+    private boolean clientExists(Long clientId, RideDTO rideDTO) {
+        List<ScheduledRide> result = scheduleRideRepository.findAllByClientId(clientId);
+        if(result.size() > 0){
+            LocalDate rideDate =rideDTO.getDate();
+           boolean sameDay =  result.stream().anyMatch(scheduledRide -> scheduledRide.getRide().getDate().isEqual(rideDate));
+           boolean sameShift =  result.stream().anyMatch(scheduledRide -> scheduledRide.getRide().getShift() == rideDTO.getShift());
+            if (sameDay && sameShift){
+                return true;
+            }
         }
         return false;
 
