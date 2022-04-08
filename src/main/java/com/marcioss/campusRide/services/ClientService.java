@@ -1,8 +1,8 @@
 package com.marcioss.campusRide.services;
 
 import com.marcioss.campusRide.entities.Client;
-import com.marcioss.campusRide.entities.dtos.inputDtos.ClientDTO;
 import com.marcioss.campusRide.entities.dtos.outputDtos.ClientOutputDTO;
+import com.marcioss.campusRide.entities.enums.Profile;
 import com.marcioss.campusRide.repositories.ClientRepository;
 import com.marcioss.campusRide.services.exceptions.DataIntegrityException;
 import lombok.RequiredArgsConstructor;
@@ -10,9 +10,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
-
-import static java.util.Optional.empty;
 
 @Service
 @RequiredArgsConstructor
@@ -38,5 +37,11 @@ public class ClientService {
                 .stream().map(e -> modelMapper.map(e, ClientOutputDTO.class))
                 .collect(Collectors.toList());
         return result;
+    }
+
+    public Set<Profile> getRoles(String email) {
+        var result = clientRepository.findByEmail(email);
+        return result.getPerfis();
+
     }
 }

@@ -43,4 +43,10 @@ public class ClientResource {
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(result.getId()).toUri();
         return ResponseEntity.created(uri).build();
     }
+
+    @GetMapping("/getroles/{email}")
+    public ResponseEntity<?> getuserRole(@PathVariable String email){
+         var result = clientService.getRoles(email);
+         return ResponseEntity.ok().body(result);
+    }
 }

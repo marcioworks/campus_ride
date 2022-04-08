@@ -3,6 +3,7 @@ package com.marcioss.campusRide;
 import com.marcioss.campusRide.entities.Client;
 import com.marcioss.campusRide.entities.enums.Profile;
 import com.marcioss.campusRide.repositories.ClientRepository;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.CommandLineRunner;
@@ -13,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootApplication
 @RequiredArgsConstructor
+@OpenAPIDefinition
 public class CampusRideApplication implements CommandLineRunner {
 
 	private final ClientRepository clientRepository;
